@@ -23,11 +23,11 @@ t  = col6.slider("CFRP thickness, tCFRP (mm)", 0.0, 2.0, 1.0, step=0.1)
 
 st.markdown("### Material Properties")
 col7, col8 = st.columns(2)
-fc = col7.select_slider("Concrete compressive strength, fc (MPa)", 20, 40, 30, step=5)
-fy = col8.select_slider("Steel yield strength, fy (MPa)", 420, 690, 520, step=10)
+fc = col7.slider("Concrete compressive strength, fc (MPa)", 20, 40, 30, step=5)
+fy = col8.slider("Steel yield strength, fy (MPa)", 420, 690, 520, step=10)
 
 col9, col10 = st.columns(2)
-ft = col9.select_slider("CFRP tensile strength, ft (MPa)", 1500, 3140, 2000, step=100)
+ft = col9.slider("CFRP tensile strength, ft (MPa)", 1500, 3140, 2000, step=100)
 fb = col10.slider("Bond strength, fb (MPa)", 0.0, 15, 8.0, step=1)
 
 st.markdown("### Blast Load")
@@ -51,3 +51,4 @@ if st.button("Predict"):
 
     st.success(f"Support rotation: **{pred}°**")
     st.warning(f"Damage degree: **{damage}**")
+
