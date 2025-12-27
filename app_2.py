@@ -1,0 +1,53 @@
+import streamlit as st
+import numpy as np
+import joblib
+
+st.set_page_config(page_title="CFRP RC Beam Damage Prediction")
+
+model = joblib.load("model1.joblib")
+scaler = joblib.load("scaler.joblib")
+
+st.title("Prediction of Damage Degree of CFRP Retrofitted RC Beams")
+
+st.markdown("### Input Beam Configuration")
+
+col1, col2, col3 = st.columns(3)
+W  = col1.slider("Beam width W (mm)", 250, 500, 300, step=10)
+WD = col2.slider("W/D ratio", 0.35, 1.25, 0.6, step=0.01)
+L  = col3.slider("Beam length L (mm)", 4600, 7600, 6000, step=100)
+
+col4, col5, col6 = st.columns(3)
+rl = col4.slider("ρl (%)", 0.8, 2.5, 1.2, step=0.05)
+rt = col5.slider("ρt (%)", 0.1, 0.3, 0.15, step=0.01)
+t  = col6.slider("CFRP thickness (mm)", 0.0, 3.0, 1.0, step=0.1)
+
+st.markdown("### Material Properties")
+col7, col8 = st.columns(2)
+fc = col7.select_slider("Concrete fc (MPa)", options=[20, 30, 40])
+fy = col8.select_slider("Steel fy (MPa)", options=[420, 520, 690])
+
+col9, col10 = st.columns(2)
+ft = col9.select_slider("CFRP ft (MPa)", options=[1500, 2000, 3140])
+fb = col10.slider("Bond strength fb (MPa)", 0.0, 20.0, 8.0, step=0.5)
+
+st.markdown("### Blast Load")
+col11, col12 = st.columns(2)
+Mass  = col11.slider("Explosive weight W (kg)", 5.0, 630.0, 50.0, step=5.0)
+Scale = col12.slider("Scaled distance Z (m/kg¹ᐟ³)", 128.0, 565.0, 300.0, step=5.0)
+
+if st.button("Predict"):
+    X = np.array([[W, WD, L, rl, rt, t,
+                   fb, fc, fy, ft, Scale, Mass]])
+    X = scaler.transform(X)
+    pred = model.predict(X)[0]
+    pred = max(0, round(pred, 3))
+
+    damage = (
+        "Low" if pred < 2 else
+        "Medium" if pred < 4 else
+        "High" if pred < 8 else
+        "Collapse"
+    )
+
+    st.success(f"Support rotation: **{pred}°**")
+    st.warning(f"Damage degree: **{damage}**")
