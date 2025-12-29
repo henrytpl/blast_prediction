@@ -29,7 +29,7 @@ ft = col9.slider(r"CFRP tensile strength, $f_t$ (MPa)", 1500, 3140, 2000, step=1
 col10, col11, col12 = st.columns(3)
 fb = col10.slider(r"Bond strength, $σ_b$ (MPa)", 0, 15, 8, step=1)
 Mass  = col11.slider(r"Explosive weight, $M$ (kg)", 5.0, 630.0, 50.0, step=5.0)
-Scale = col12.slider(r"Scaled distance, $Z$ (m/kg$^{1/3}$)", 128.0, 565.0, 300.0, step=5.0)
+Scale = col12.slider(r"Scaled distance, $Z$ (mm/kg$^{1/3}$)", 128.0, 565.0, 300.0, step=5.0)
 
 
 if st.button("Predict"):
@@ -47,3 +47,4 @@ if st.button("Predict"):
 
     st.success(f"Support rotation: **{pred}°**")
     st.warning(f"Damage degree: **{damage}**")
+
